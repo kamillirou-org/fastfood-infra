@@ -1,10 +1,10 @@
-# Application Load Balancer
+# Application Load Balancer (Internal - only accessible via API Gateway)
 resource "aws_lb" "main" {
   name               = "${local.name}-alb"
-  internal           = false
+  internal           = true
   load_balancer_type = "application"
   security_groups    = [aws_security_group.alb.id]
-  subnets            = aws_subnet.public[*].id
+  subnets            = aws_subnet.private[*].id
 
   enable_deletion_protection = false
 
