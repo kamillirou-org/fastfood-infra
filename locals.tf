@@ -1,5 +1,5 @@
 locals {
-  name = "${var.project_name}-infra"
+  name = var.project_name
 
   common_tags = {
     Environment = var.environment
