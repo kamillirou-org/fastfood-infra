@@ -43,7 +43,7 @@ variable "environment" {
 variable "project_name" {
   description = "Project name"
   type        = string
-  default     = "fastfood-infra"
+  default     = "fastfood"
 }
 
 variable "public_subnet_cidrs" {
