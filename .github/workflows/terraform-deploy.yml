@@ -4,12 +4,12 @@ on:
   push:
     branches: [ main, develop ]
     paths:
-      - 'fastfood-infra/**'
+      - '**'
       - '.github/workflows/terraform-deploy.yml'
   pull_request:
     branches: [ main ]
     paths:
-      - 'fastfood-infra/**'
+      - '**'
       - '.github/workflows/terraform-deploy.yml'
 
 env:
@@ -42,19 +42,19 @@ jobs:
 
     - name: Terraform Format Check
       run: terraform fmt -check
-      working-directory: fastfood-infra
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Init
       run: terraform init
-      working-directory: fastfood-infra
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Validate
       run: terraform validate
-      working-directory: fastfood-infra
+      working-directory: ${{ env.WORKING_DIRECTORY }}
 
     - name: Terraform Plan
       run: terraform plan -no-color
-      working-directory: fastfood-infra
+      working-directory: ${{ env.WORKING_DIRECTORY }}
       env:
         TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
         TF_VAR_jwt_secret: ${{ secrets.JWT_SECRET }}
@@ -81,26 +81,26 @@ jobs:
       with:
         terraform_version: ${{ env.TF_VERSION }}
 
-    - name: Setup Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
+    # - name: Setup Python
+    #   uses: actions/setup-python@v4
+    #   with:
+    #     python-version: '3.9'
 
-    - name: Build Lambda Functions
-      run: |
-        echo "🔧 Building Lambda functions..."
-        
-        # Build auth Lambda
-        cd fastfood-lambda/auth
-        pip install -r requirements.txt -t .
-        zip -r ../../fastfood-infra/lambda-auth.zip .
-        echo "✅ Auth Lambda function built successfully!"
-        
-        # Build Cognito challenge Lambda
-        cd ../cognito-challenge
-        pip install -r requirements.txt -t .
-        zip -r ../../fastfood-infra/lambda-cognito-challenge.zip .
-        echo "✅ Cognito challenge Lambda function built successfully!"
+    # - name: Build Lambda Functions
+    #   run: |
+    #     echo "🔧 Building Lambda functions..."
+    #     
+    #     # Build auth Lambda
+    #     cd fastfood-lambda/auth
+    #     pip install -r requirements.txt -t .
+    #     zip -r ../../fastfood-infra/lambda-auth.zip .
+    #     echo "✅ Auth Lambda function built successfully!"
+    #     
+    #     # Build Cognito challenge Lambda
+    #     cd ../cognito-challenge
+    #     pip install -r requirements.txt -t .
+    #     zip -r ../../fastfood-infra/lambda-cognito-challenge.zip .
+    #     echo "✅ Cognito challenge Lambda function built successfully!"
 
     - name: Terraform Init
       run: terraform init
