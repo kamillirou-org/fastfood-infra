@@ -1,5 +1,5 @@
 locals {
-  name = var.project_name
+  name = "fastfood-infra"
 
   common_tags = {
     Environment = var.environment
