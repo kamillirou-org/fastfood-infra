@@ -81,7 +81,7 @@ resource "aws_lambda_function" "auth" {
   function_name    = "${local.name}-auth"
   role             = data.aws_iam_role.lab_role.arn
   handler          = "index.handler"
-  source_code_hash = data.archive_file.lambda_auth.output_base64sha256
+  # source_code_hash = data.archive_file.lambda_auth.output_base64sha256
   runtime          = "python3.11"
   timeout          = 30
 
@@ -465,8 +465,8 @@ resource "aws_lambda_function" "cognito_challenge" {
   handler          = "index.handler"
   runtime          = "python3.9"
   role             = data.aws_iam_role.lab_role.arn
-  filename         = data.archive_file.lambda_cognito_challenge.output_path
-  source_code_hash = data.archive_file.lambda_cognito_challenge.output_base64sha256
+  filename         = "lambda-cognito-challenge.zip"
+  # source_code_hash = data.archive_file.lambda_cognito_challenge.output_base64sha256
   timeout          = 30
   memory_size      = 128
 
@@ -482,18 +482,18 @@ resource "aws_lambda_permission" "cognito_challenge" {
   source_arn    = aws_cognito_user_pool.main.arn
 }
 
-# Archive file for Cognito Challenge Lambda code
-data "archive_file" "lambda_cognito_challenge" {
-  type        = "zip"
-  output_path = "lambda-cognito-challenge.zip"
-  source_dir  = "../fastfood-lambda/cognito-challenge"
-  excludes    = ["__pycache__", "*.pyc", ".git*", "*.DS_Store"]
-}
+# Use existing Lambda ZIP file
+# data "archive_file" "lambda_cognito_challenge" {
+#   type        = "zip"
+#   output_path = "lambda-cognito-challenge.zip"
+#   source_dir  = "../fastfood-lambda/cognito-challenge"
+#   excludes    = ["__pycache__", "*.pyc", ".git*", "*.DS_Store"]
+# }
 
-# Archive file for Lambda code (created by build script)
-data "archive_file" "lambda_auth" {
-  type        = "zip"
-  output_path = "lambda-auth.zip"
-  source_dir  = "../fastfood-lambda/auth"
-  excludes    = ["__pycache__", "*.pyc", ".git*", "*.DS_Store"]
-}
+# Use existing Lambda ZIP file
+# data "archive_file" "lambda_auth" {
+#   type        = "zip"
+#   output_path = "lambda-auth.zip"
+#   source_dir  = "../fastfood-lambda/auth"
+#   excludes    = ["__pycache__", "*.pyc", ".git*", "*.DS_Store"]
+# }
