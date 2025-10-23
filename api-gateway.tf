@@ -77,13 +77,13 @@ resource "aws_api_gateway_method" "login" {
 
 # Lambda Function for authentication
 resource "aws_lambda_function" "auth" {
-  filename         = "lambda-auth.zip"
-  function_name    = "${local.name}-auth"
-  role             = data.aws_iam_role.lab_role.arn
-  handler          = "index.handler"
+  filename      = "lambda-auth.zip"
+  function_name = "${local.name}-auth"
+  role          = data.aws_iam_role.lab_role.arn
+  handler       = "index.handler"
   # source_code_hash = data.archive_file.lambda_auth.output_base64sha256
-  runtime          = "python3.11"
-  timeout          = 30
+  runtime = "python3.11"
+  timeout = 30
 
   vpc_config {
     subnet_ids         = aws_subnet.private[*].id
@@ -461,14 +461,14 @@ resource "aws_api_gateway_integration" "clientes_post_integration" {
 
 # Lambda Function for Cognito Custom Challenge
 resource "aws_lambda_function" "cognito_challenge" {
-  function_name    = "${local.name}-cognito-challenge"
-  handler          = "index.handler"
-  runtime          = "python3.9"
-  role             = data.aws_iam_role.lab_role.arn
-  filename         = "lambda-cognito-challenge.zip"
+  function_name = "${local.name}-cognito-challenge"
+  handler       = "index.handler"
+  runtime       = "python3.9"
+  role          = data.aws_iam_role.lab_role.arn
+  filename      = "lambda-cognito-challenge.zip"
   # source_code_hash = data.archive_file.lambda_cognito_challenge.output_base64sha256
-  timeout          = 30
-  memory_size      = 128
+  timeout     = 30
+  memory_size = 128
 
   tags = local.common_tags
 }
