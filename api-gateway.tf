@@ -79,11 +79,11 @@ resource "aws_api_gateway_method" "login" {
 resource "aws_lambda_function" "auth" {
   filename         = "lambda-auth.zip"
   function_name    = "${local.name}-auth"
-  role            = data.aws_iam_role.lab_role.arn
-  handler         = "index.handler"
+  role             = data.aws_iam_role.lab_role.arn
+  handler          = "index.handler"
   source_code_hash = data.archive_file.lambda_auth.output_base64sha256
-  runtime         = "python3.11"
-  timeout         = 30
+  runtime          = "python3.11"
+  timeout          = 30
 
   vpc_config {
     subnet_ids         = aws_subnet.private[*].id
@@ -125,8 +125,8 @@ resource "aws_api_gateway_integration" "login" {
   http_method = aws_api_gateway_method.login.http_method
 
   integration_http_method = "POST"
-  type                   = "AWS_PROXY"
-  uri                    = aws_lambda_function.auth.invoke_arn
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.auth.invoke_arn
 }
 
 # API Gateway Deployment
@@ -282,12 +282,12 @@ resource "aws_api_gateway_method" "health_get" {
 
 # Network Load Balancer for VPC Link
 resource "aws_lb" "nlb" {
-  name               = "${local.name}-nlb"
-  internal           = true
-  load_balancer_type = "network"
-  subnets            = aws_subnet.private[*].id
+  name                       = "${local.name}-nlb"
+  internal                   = true
+  load_balancer_type         = "network"
+  subnets                    = aws_subnet.private[*].id
   enable_deletion_protection = false
-  tags = local.common_tags
+  tags                       = local.common_tags
 }
 
 # NLB Target Group
@@ -297,7 +297,7 @@ resource "aws_lb_target_group" "nlb" {
   protocol    = "TCP"
   vpc_id      = aws_vpc.main.id
   target_type = "ip"
-  
+
   health_check {
     enabled             = true
     healthy_threshold   = 2
@@ -307,7 +307,7 @@ resource "aws_lb_target_group" "nlb" {
     timeout             = 5
     unhealthy_threshold = 2
   }
-  
+
   tags = local.common_tags
 }
 
@@ -316,12 +316,12 @@ resource "aws_lb_listener" "nlb" {
   load_balancer_arn = aws_lb.nlb.arn
   port              = "80"
   protocol          = "TCP"
-  
+
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.nlb.arn
   }
-  
+
   tags = local.common_tags
 }
 

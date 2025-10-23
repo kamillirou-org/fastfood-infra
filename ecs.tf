@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "app" {
     {
       name  = "${local.name}-app"
       image = "${aws_ecr_repository.app.repository_url}:latest"
-      
+
       portMappings = [
         {
           containerPort = var.app_port
@@ -46,24 +46,24 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
 
-        environment = [
-          {
-            name  = "SPRING_PROFILES_ACTIVE"
-            value = "prod"
-          },
-          {
-            name  = "DATABASE_URL"
-            value = "jdbc:postgresql://${var.db_endpoint}:5432/${var.db_name}"
-          },
-          {
-            name  = "DATABASE_USERNAME"
-            value = var.db_username
-          },
-          {
-            name  = "DATABASE_PASSWORD"
-            value = var.db_password
-          }
-        ]
+      environment = [
+        {
+          name  = "SPRING_PROFILES_ACTIVE"
+          value = "prod"
+        },
+        {
+          name  = "DATABASE_URL"
+          value = "jdbc:postgresql://${var.db_endpoint}:5432/${var.db_name}"
+        },
+        {
+          name  = "DATABASE_USERNAME"
+          value = var.db_username
+        },
+        {
+          name  = "DATABASE_PASSWORD"
+          value = var.db_password
+        }
+      ]
 
       logConfiguration = {
         logDriver = "awslogs"

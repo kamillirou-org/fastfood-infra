@@ -58,8 +58,8 @@ resource "aws_cognito_user_pool" "main" {
 
   # Custom authentication flow
   lambda_config {
-    create_auth_challenge = aws_lambda_function.cognito_challenge.arn
-    define_auth_challenge = aws_lambda_function.cognito_challenge.arn
+    create_auth_challenge          = aws_lambda_function.cognito_challenge.arn
+    define_auth_challenge          = aws_lambda_function.cognito_challenge.arn
     verify_auth_challenge_response = aws_lambda_function.cognito_challenge.arn
   }
 
@@ -80,9 +80,9 @@ resource "aws_cognito_user_pool_client" "main" {
   user_pool_id = aws_cognito_user_pool.main.id
 
   # Client settings
-  generate_secret                      = false
-  prevent_user_existence_errors        = "ENABLED"
-  enable_token_revocation              = true
+  generate_secret                               = false
+  prevent_user_existence_errors                 = "ENABLED"
+  enable_token_revocation                       = true
   enable_propagate_additional_user_context_data = false
 
   # Token validity
