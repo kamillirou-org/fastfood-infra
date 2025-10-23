@@ -73,7 +73,7 @@ resource "aws_route_table_association" "public" {
 resource "aws_eip" "nat" {
   count = length(aws_subnet.public)
 
-  domain = "vpc"
+  domain     = "vpc"
   depends_on = [aws_internet_gateway.main]
 
   tags = merge(local.common_tags, {

@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "app" {
     {
       name  = "${local.name}-app"
       image = "${aws_ecr_repository.app.repository_url}:latest"
-      
+
       portMappings = [
         {
           containerPort = var.app_port
@@ -46,24 +46,24 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
 
-        environment = [
-          {
-            name  = "SPRING_PROFILES_ACTIVE"
-            value = "prod"
-          },
-          {
-            name  = "DATABASE_URL"
-            value = "jdbc:postgresql://fastfood-db-instance.cn8u9h3oyjdy.us-east-1.rds.amazonaws.com:5432/fastfood"
-          },
-          {
-            name  = "DATABASE_USERNAME"
-            value = "fastfood_admin"
-          },
-          {
-            name  = "DATABASE_PASSWORD"
-            value = "changeme123!"
-          }
-        ]
+      environment = [
+        {
+          name  = "SPRING_PROFILES_ACTIVE"
+          value = "prod"
+        },
+        {
+          name  = "DATABASE_URL"
+          value = "jdbc:postgresql://${var.db_endpoint}:5432/${var.db_name}"
+        },
+        {
+          name  = "DATABASE_USERNAME"
+          value = var.db_username
+        },
+        {
+          name  = "DATABASE_PASSWORD"
+          value = var.db_password
+        }
+      ]
 
       logConfiguration = {
         logDriver = "awslogs"
@@ -97,6 +97,12 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.app.arn
+    container_name   = "${local.name}-app"
+    container_port   = var.app_port
+  }
+
+  load_balancer {
+    target_group_arn = aws_lb_target_group.nlb.arn
     container_name   = "${local.name}-app"
     container_port   = var.app_port
   }
